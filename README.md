@@ -23,10 +23,6 @@ Urocure is a specialized chatbot designed for the field of urology. This Python 
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/your-username/urocure.git
-cd urocure
-```
 
 2. Install dependencies:
 
