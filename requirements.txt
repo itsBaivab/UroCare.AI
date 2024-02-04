@@ -1,0 +1,6 @@
+langchain
+langchain-community
+pymongo
+streamlit
+python-dotenv
+requests
