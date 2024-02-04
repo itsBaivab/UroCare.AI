@@ -10,13 +10,14 @@ from dotenv import load_dotenv
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain_openai import OpenAI
-
+import streamlit as st
 
 
 # Load environment variables from .env file
 load_dotenv()
 
-
+st.title("UroCare - RAG Approach")
+st.subheader("Dataset used is http://openkg.cn/dataset/rjua-qadatasets")
 # Define the URL of the PDF MongoDB Atlas Best Practices document
 
 # Retrieve environment variables for sensitive information
@@ -39,17 +40,17 @@ COLLECTION_NAME = "vector_collection"
 MONGODB_COLLECTION = cluster[DB_NAME][COLLECTION_NAME]
 
 # Initialize the PDF loader with the defined URL
-path = "D:\\Urologist.AI\\test"  # Fix the path string by escaping the backslashes
-loader = TextLoader("test\input2.txt", encoding = 'UTF-8')
+# path = "D:\\Urologist.AI\\test"  # Fix the path string by escaping the backslashes
+# loader = TextLoader("test\input2.txt", encoding = 'UTF-8')
 
-data = loader.load()
-print(len(data))
+# data = loader.load()
+# print(len(data))
 
-# Initialize the text splitter
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+# # Initialize the text splitter
+# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
 
-# Split the document into manageable segments
-docs = text_splitter.split_documents(data)
+# # Split the document into manageable segments
+# docs = text_splitter.split_documents(data)
 
 # code for ingesting the documents into MongoDB Atlas -----------------------------------------
 # Initialize MongoDB Atlas vector search with the document segments
@@ -77,7 +78,7 @@ qa_retriever = vector_search.as_retriever(
 )
 
 prompt_template = """You are a Urologist Doctor who provides friendly assistance and helps to diagnose patients and suggest them treatment . Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.Always give the answers in english language.
-Traslate the context to english language before using it to answer the question.also Traslate the question in english language before using it with the context to answer .
+Traslate the context to english language before using it to answer the question.also Traslate the question in english language before using it with the context to answer . Strictly answer if and only if the question is in the field of Urology.   Also start every answer with "Urocure's answer is
 
 Context: {context}
 
@@ -111,11 +112,11 @@ headers = {"Authorization": "Bearer Vb8tymIOp_0pJDawvLQ634Y_z7yzOvkzJumR1me7"}
 def run(model, input):
     response = requests.post(f"{API_BASE_URL}{model}", headers=headers, json=input)
     return response.json()
-# input = """Pain: The patient experiences renal colic, often intermittent and radiating to the perineum. In chronic cases, pain may be less prominent.Urinary Symptoms: Bilateral incomplete obstruction may result in polyuria, while complete obstruction may lead to anuria. Infection-related obstructions may cause bladder irritation symptoms. Hypertension: Common due to increased renin secretion or sodium retention. Polycythemia: Due to increased erythropoietin secretion from hydronephrosis. Acidosis: Impaired renal tubular acid secretion.. GIVE ME SOME ADICE ON TREATMENT OPTIONS alsway give"""
+# input = """Pain: The patient experiences renal colic, often intermittent and radiating to the perineum. In chronic cases, pain may be less prominent.Urinary Symptoms: Bilateral incomplete obstruction may result in polyuria, while complete obstruction may lead to anuria. Infection-related obstructions may cause bladder irritation symptoms. Hypertension: Common due to increased renin secretion or sodium retention. Polycythemia: Due to increased erythropoietin secretion from hydronephrosis. Acidosis: Impaired renal tubular acid secretion.. GIVE ME SOME ADICE ON TREATMENT OPTIONS alsway give." """
 
-
+input_text = st.text_input('Enter message ')
 output = run('@cf/meta/m2m100-1.2b', {
-    "text": " bilateral ureteral stones is causing obstruction, leading to hydronephrosis and impaired urine flow.Give me some treatment suggestions",
+    "text": input_text,
     "source_lang": "english",
     "target_lang": "chinese"
 })
@@ -127,5 +128,16 @@ if docs["result"]:
 # print(docs["result"]) 
 # print(output)
 
+if st.button('Send Message') and input_text:
+        with st.spinner('Generating response...'):
+            try:
+                # Generate satirical response
+                response = output
+                st.write(docs["result"])
+                # Store conversation
+                # st.session_state.past.append(input_text)
+                # st.session_state.generated.append(response)
 
-
+                #Display conversation in reverse order
+            except Exception as e:
+                            st.error(f"An error occurred: {str(e)}")
