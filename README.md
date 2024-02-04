@@ -1,1 +1,57 @@
-# Desktop-Assistant
+# Urocure - Urology Chatbot
+
+Urocure is a specialized chatbot designed for the field of urology. This Python project utilizes a Streamlit web app, allowing users to interact with the AI and ask questions related to urology. The chatbot is powered by RAG (Retrieval-Augmented Generation) and has been trained on a Chinese dataset containing over 2000 entries. The dataset is stored in MongoDB Atlas as a vector database.
+
+## Features
+
+- **Streamlit Web App:** User-friendly interface for interacting with the urology chatbot.
+- **RAG Model:** Utilizes Retrieval-Augmented Generation for improved responses.
+- **Chinese Dataset:** Trained on a diverse dataset of 2000+ entries in Chinese.
+- **MongoDB Atlas:** Stores the dataset as a vector database for efficient retrieval.
+
+## How It Works
+
+1. **User Prompt:** Users send their queries in English through the web app.
+2. **Translation:** Cloudflare Translation API is used to translate the English request into Chinese.
+3. **RAG Embeddings:** The translated request is passed through the RAG model to generate embeddings.
+4. **Embedding Conversion:** Chinese embeddings are converted back to English based on prompt engineering.
+
+## Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/urocure.git
+cd urocure
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Set up MongoDB Atlas:
+
+   - Create an account on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+   - Create a new cluster and obtain the connection string.
+   - Update the connection string in `config.py`.
+
+4. Run the Streamlit web app:
+
+```bash
+streamlit run app.py
+```
+
+Visit [http://localhost:8501](http://localhost:8501) to interact with Urocure.
+
+## Contributors
+
+- John Doe (@johndoe)
+- Jane Smith (@janesmith)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Feel free to contribute and enhance the capabilities of Urocure!
